@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, StyleSheet, Alert } from 'react-native';
 
 class TicTacToe extends Component {
     constructor(props) {
@@ -8,6 +8,10 @@ class TicTacToe extends Component {
             board: Array(9).fill(null),
             currentPlayer: Math.random() < 0.5 ? 'X' : 'O', // Choix aléatoire du premier joueur
             winner: null,
+            playerX: "Joueur 1",
+            playerO: "Joueur 2",
+            editingX: false,
+            editingO: false,
         };
     }
 
@@ -31,7 +35,7 @@ class TicTacToe extends Component {
 
         // Affichage du gagnant ou match nul
         if (newWinner) {
-            Alert.alert(`Victoire !`, `Le joueur ${newWinner} a gagné !`, [{ text: 'OK' }]);
+            Alert.alert(`Victoire !`, `${this.getPlayerName(newWinner)} a gagné !`, [{ text: 'OK' }]);
         } else if (!newBoard.includes(null)) {
             Alert.alert(`Égalité !`, `La partie est terminée sans vainqueur.`, [{ text: 'OK' }]);
         }
@@ -61,6 +65,18 @@ class TicTacToe extends Component {
         });
     };
 
+    getPlayerName = (symbol) => {
+        return symbol === 'X' ? this.state.playerX : this.state.playerO;
+    };
+
+    handleNameChange = (symbol, newName) => {
+        if (symbol === 'X') {
+            this.setState({ playerX: newName });
+        } else {
+            this.setState({ playerO: newName });
+        }
+    };
+
     renderSquare = (index) => {
         return (
             <TouchableOpacity style={styles.square} onPress={() => this.handlePress(index)}>
@@ -72,9 +88,46 @@ class TicTacToe extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <Text style={styles.title}>Morpion</Text>
-                <Text style={styles.turn}>Tour du joueur : {this.state.currentPlayer}</Text>
-                
+                <View style={styles.playersContainer}>
+                    {/* Carte Joueur X */}
+                    <TouchableOpacity
+                        style={[styles.playerCard, this.state.currentPlayer !== 'X' && styles.disabledCard]}
+                        onPress={() => this.setState({ editingX: true })}
+                    >
+                        {this.state.editingX ? (
+                            <TextInput
+                                style={styles.input}
+                                value={this.state.playerX}
+                                onChangeText={(text) => this.handleNameChange('X', text)}
+                                onBlur={() => this.setState({ editingX: false })}
+                                autoFocus
+                            />
+                        ) : (
+                            <Text style={styles.playerText}>{this.state.playerX}</Text>
+                        )}
+                    </TouchableOpacity>
+
+                    {/* Carte Joueur O */}
+                    <TouchableOpacity
+                        style={[styles.playerCard, this.state.currentPlayer !== 'O' && styles.disabledCard]}
+                        onPress={() => this.setState({ editingO: true })}
+                    >
+                        {this.state.editingO ? (
+                            <TextInput
+                                style={styles.input}
+                                value={this.state.playerO}
+                                onChangeText={(text) => this.handleNameChange('O', text)}
+                                onBlur={() => this.setState({ editingO: false })}
+                                autoFocus
+                            />
+                        ) : (
+                            <Text style={styles.playerText}>{this.state.playerO}</Text>
+                        )}
+                    </TouchableOpacity>
+                </View>
+
+                <Text style={styles.turn}>Tour de : {this.getPlayerName(this.state.currentPlayer)}</Text>
+
                 <View style={styles.board}>
                     {this.state.board.map((_, index) => this.renderSquare(index))}
                 </View>
@@ -94,10 +147,32 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#F5F5F5',
     },
-    title: {
-        fontSize: 32,
-        fontWeight: 'bold',
+    playersContainer: {
+        flexDirection: 'row',
         marginBottom: 20,
+    },
+    playerCard: {
+        flex: 1,
+        padding: 10,
+        marginHorizontal: 5,
+        backgroundColor: '#007BFF',
+        alignItems: 'center',
+        borderRadius: 5,
+    },
+    disabledCard: {
+        backgroundColor: '#A0A0A0',
+    },
+    playerText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+    input: {
+        backgroundColor: '#fff',
+        padding: 5,
+        width: '90%',
+        textAlign: 'center',
+        borderRadius: 5,
     },
     turn: {
         fontSize: 18,
@@ -124,7 +199,7 @@ const styles = StyleSheet.create({
     resetButton: {
         marginTop: 20,
         padding: 10,
-        backgroundColor: '#007BFF',
+        backgroundColor: '#FF5733',
         borderRadius: 5,
     },
     resetText: {
