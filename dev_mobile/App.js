@@ -1,5 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { Component } from 'react'
+import { StyleSheet, Text, View, Button } from 'react-native';
 import { SafeAreaView } from 'react-native';
 import Hello from './components/Exo1/Hello';
 import HelloChildren from './components/Exo2/HelloChildren';
@@ -8,24 +9,16 @@ import MyButton from './components/Exo4/MyButton';
 import HelloStyle from './components/Exo5/HelloStyle';
 import ExternalStyle from './components/Exo6/ExternalStyle';
 import FlexBox from './components/Exo7/FlexBox';
+import CheckBoxList from './components/Exo8/CheckBoxList';
+import BorderGrow from './components/Exo9/BorderGrow';
+import TicTacToe from './components/Bonus/TicTacToe';
 
-export default function App() {
+const App = () => {
   return (
-    <View style={styles.container}>
-      <Hello name="John" />
-      <HelloStyle name="John" age="25" ville="Paris"> et toi ?</HelloStyle>
-      <ExternalStyle name="John" age="25" ville="Paris"> et toi ?</ExternalStyle>
-      <FlexBox />
-      <StatusBar style="auto" />
-    </View>
+      <SafeAreaView style={{ flex: 1 }}>
+          <TicTacToe />
+      </SafeAreaView>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
