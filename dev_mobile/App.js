@@ -1,9 +1,19 @@
-// App.js
 import React from 'react';
-import TodoList from './components/TodoList/TodoList';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import HomeScreen from './components/TodoList/HomeScreen';
+import StatsScreen from './components/TodoList/StatsScreen';
+
+
+const Stack = createStackNavigator();
 
 export default function App() {
   return (
-    <TodoList />
+    <NavigationContainer>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Stats" component={StatsScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
